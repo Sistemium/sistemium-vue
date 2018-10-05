@@ -1,0 +1,24 @@
+{
+  "name": "sistemium-vue",
+  "version": "1.0.0",
+  "description": "Sistemium VueJS base library",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sistemium/sistemium-vue.git"
+  },
+  "author": "Sistemium UAB",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Sistemium/sistemium-vue/issues"
+  },
+  "homepage": "https://github.com/Sistemium/sistemium-vue#readme",
+  "devDependencies": {
+    "lodash": "^4.17.11",
+    "sistemium-telegram": "^1.2.5",
+    "vue": "^2.5.17"
+  }
+}
