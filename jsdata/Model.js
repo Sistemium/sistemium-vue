@@ -91,7 +91,7 @@ export default class VueManagedModel extends Model {
    * Binds a components's property to the store record
    * @param {Object} component
    * @param {(string|Function)} idOrFunction
-   * @param {string} property
+   * @param {string} [property]
    * @param {Function} [onChange]
    * @returns {*}
    */
@@ -112,7 +112,11 @@ export default class VueManagedModel extends Model {
       const data = getDataById();
       // eslint-disable-next-line
       // console.info('onDataChange', this.name, property, data);
-      Vue.set(component, property, data);
+      if (property) {
+        Vue.set(component, property, data);
+      } else {
+        component.$forceUpdate();
+      }
       if (onChange) {
         onChange(data);
       }
@@ -122,11 +126,13 @@ export default class VueManagedModel extends Model {
     this.offs[cid] = this.offs[cid] || {};
     const offs = this.offs[cid];
 
-    if (offs[property]) {
-      this.unbind(component, property);
+    const bindKey = property || idOrFunction;
+
+    if (offs[bindKey]) {
+      this.unbind(component, bindKey);
     }
 
-    offs[property] = [
+    offs[bindKey] = [
       this.mon('add', onDataChange),
       this.mon('remove', onDataChange),
     ];
