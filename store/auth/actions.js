@@ -20,14 +20,15 @@ export default {
 
   async [AUTH_INIT]({ commit }, accessToken) {
 
-    const token = isNative() ? true : accessToken || localStorage.getItem(LS_KEY);
-    const rolesPromise = isNative() ? getRoles() : roles(token);
+    const token = (isNative() ? true : accessToken) || localStorage.getItem(LS_KEY);
 
     commit(m.AUTHORIZING, token);
 
     if (!token) {
       return Promise.resolve();
     }
+
+    const rolesPromise = isNative() ? getRoles() : roles(token);
 
     await new Promise(resolve => setTimeout(resolve, 1000));
 
