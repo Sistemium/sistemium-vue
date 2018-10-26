@@ -1,6 +1,6 @@
 {
   "name": "sistemium-vue",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Sistemium VueJS base library",
   "main": "index.js",
   "scripts": {
