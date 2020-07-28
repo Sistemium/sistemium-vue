@@ -18,14 +18,20 @@ window[MESSAGE_CALLBACK] = messageCallback;
 window.iSistemiumIOSCallback = arrayMessageCallback;
 window.iSistemiumIOSErrorCallback = arrayMessageCallback;
 
-if (isNative()) {
-  toggleTabBar();
-}
+// if (isNative()) {
+//   toggleTabBar();
+// }
 
 export function toggleTabBar() {
   const action = isShownTabBar() ? 'hide' : 'show';
   tabBarShown = !tabBarShown;
   return handler('tabbar').postMessage({ action });
+}
+
+export function hideTabBar() {
+  tabBarShown = false;
+  return handler('tabbar')
+    .postMessage({ action: 'hide' });
 }
 
 export function isShownTabBar() {
