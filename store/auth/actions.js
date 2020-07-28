@@ -20,7 +20,7 @@ export default {
 
   async [AUTH_INIT]({ commit }, accessToken) {
 
-    const token = (isNative() ? true : accessToken) || localStorage.getItem(LS_KEY);
+    const token = accessToken || localStorage.getItem(LS_KEY) || isNative();
 
     commit(m.AUTHORIZING, token);
 
@@ -30,12 +30,13 @@ export default {
 
     const rolesPromise = isNative() ? getRoles() : roles(token);
 
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 500));
 
     return rolesPromise
       .then(res => {
-        localStorage.setItem(LS_KEY, token);
-        authorizeJSDataStore(token, res.account.org);
+        const { id: gotToken } = res;
+        localStorage.setItem(LS_KEY, gotToken);
+        authorizeJSDataStore(gotToken, res.account.org);
         commit(m.AUTHORIZED, res);
       })
       .catch(error => commit(m.NOT_AUTHORIZED, error));
