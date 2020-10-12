@@ -1,5 +1,5 @@
-import { authorize as authorizeJSDataStore } from 'sistemium-telegram/jsdata/store';
-import { confirm, login, roles } from 'sistemium-telegram/services/auth';
+import { authorize as authorizeJSDataStore } from 'sistemium-jsdata/lib/store';
+import { confirm, login, roles } from 'sistemium-jsdata/lib/auth';
 
 import * as m from './mutations';
 import { isNative, getRoles } from '../../services/native';

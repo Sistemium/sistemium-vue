@@ -2,7 +2,7 @@
 import Vue from 'vue';
 import isFunction from 'lodash/isFunction';
 // import store from 'sistemium-telegram/jsdata/store';
-import Model from 'sistemium-telegram/jsdata/Model';
+import Model from 'sistemium-jsdata/lib/Model';
 // import log from 'sistemium-telegram/services/log';
 // import { serverDateTimeFormat } from 'sistemium-telegram/services/moments';
 
