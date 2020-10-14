@@ -11,6 +11,7 @@ export const AUTH_REQUEST = 'AUTH_REQUEST';
 export const AUTH_REQUEST_CONFIRM = 'AUTH_REQUEST_CONFIRM';
 export const LOGOFF = 'LOGOFF';
 export const CLEAR_ERROR = '';
+export const LOG_ACCOUNT = 'LOG_ACCOUNT';
 
 export default {
 
@@ -38,8 +39,25 @@ export default {
         localStorage.setItem(LS_KEY, gotToken);
         authorizeJSDataStore(gotToken, res.account.org);
         commit(m.AUTHORIZED, res);
+        commit(m.SAVE_ACCOUNT, { authorization: gotToken, account: res.account });
       })
       .catch(error => commit(m.NOT_AUTHORIZED, error));
+
+  },
+
+  async [LOG_ACCOUNT]({ dispatch }, account) {
+
+    if (!account) {
+      throw new Error('Account to log in must be not empty');
+    }
+
+    const token = m.getSavedAuthorization(account);
+
+    if (!token) {
+      throw new Error('No saved account info');
+    }
+
+    await dispatch(AUTH_INIT, token);
 
   },
 
@@ -85,6 +103,7 @@ export default {
   [LOGOFF]({ commit }) {
     commit(m.AUTHORIZED, { account: false, roles: false });
     localStorage.removeItem(LS_KEY);
+    m.clearSavedAccounts();
   },
 
   [CLEAR_ERROR]({ commit }) {

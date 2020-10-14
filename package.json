@@ -4,7 +4,7 @@
   "description": "Sistemium VueJS base library",
   "main": "index.js",
   "scripts": {
-    "test": "eslint jsdata services store"
+    "test": "eslint jsdata services store components styles"
   },
   "repository": {
     "type": "git",
