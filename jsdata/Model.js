@@ -16,10 +16,26 @@ export default class VueManagedModel extends Model {
 
     this.offs = {};
 
+    Vue.util.defineReactive(this, 'ts', null);
+    Vue.util.defineReactive(this, 'lastFetchOffset', null);
+
+    const me = this;
+
+    const updateTs = () => {
+      // setTimeout(() => {
+      // console.info(name, event, data && data.length) // eslint-disable-line
+      me.ts = new Date().toJSON();
+      // });
+    };
+
+    this.mon('add', updateTs);
+    this.mon('change', updateTs);
+    this.mon('remove', updateTs);
+
   }
 
   mon(event, callback) {
-    const listener = (name, data) => name === this.name && callback(name, data);
+    const listener = (name, data) => name === this.name && callback(name, data, event);
     this.store.on(event, listener);
     return () => this.store.off(event, listener);
   }
