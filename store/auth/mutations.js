@@ -1,4 +1,4 @@
-import Vue from 'vue';
+// import Vue from 'vue';
 import map from 'lodash/map';
 
 import * as g from './getters';
@@ -15,24 +15,26 @@ const LS_KEY_ACCOUNTS = 'stv.accounts';
 export default {
 
   [AUTHORIZING](state, token) {
-    Vue.set(state, 'busy', token || false);
+    state.busy = token || false;
   },
 
   [PHA_AUTH_TOKEN](state, id) {
     notBusy(state);
-    Vue.set(state, PHA_AUTH_TOKEN, id);
+    state[PHA_AUTH_TOKEN] = id;
   },
 
   [AUTHORIZED](state, data) {
     notBusy(state);
     state[PHA_AUTH_TOKEN] = false;
     Object.keys(data)
-      .forEach(key => Vue.set(state, key, data[key]));
+      .forEach(key => {
+        state[key] = data[key];
+      });
   },
 
   [NOT_AUTHORIZED](state, error) {
     notBusy(state);
-    Vue.set(state, 'error', error);
+    state.error = error;
   },
 
   [SAVE_ACCOUNT](state, { authorization, account }) {

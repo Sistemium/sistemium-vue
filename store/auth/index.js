@@ -12,7 +12,11 @@ export default {
 
   state() {
     return {
+      id: undefined,
       account: undefined,
+      busy: false,
+      roles: undefined,
+      token: undefined,
       error: false,
       [PHA_AUTH_TOKEN]: {},
       savedAccounts: [],
