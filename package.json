@@ -4,7 +4,7 @@
   "description": "Sistemium VueJS base library",
   "main": "index.js",
   "scripts": {
-    "test": "eslint jsdata services store components styles"
+    "test": "eslint jsdata mixins services store components styles"
   },
   "repository": {
     "type": "git",
@@ -19,6 +19,7 @@
   "dependencies": {
     "axios": "^0.21.0",
     "lodash": "^4.17.20",
+    "sistemium-debug": "^1.0.1",
     "sistemium-jsdata": "^1.0.5",
     "vue": "^2.6.12",
     "vuex": "^3.5.1"
