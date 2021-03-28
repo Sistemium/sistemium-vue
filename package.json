@@ -17,7 +17,6 @@
   },
   "homepage": "https://github.com/Sistemium/sistemium-vue#readme",
   "dependencies": {
-    "axios": "^0.21.0",
     "lodash": "^4.17.20",
     "sistemium-debug": "^1.0.1",
     "sistemium-jsdata": "^1.0.5",
