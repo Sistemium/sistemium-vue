@@ -21,7 +21,10 @@ export default {
 
   async [AUTH_INIT]({ commit }, accessToken) {
 
-    const token = accessToken || localStorage.getItem(LS_KEY) || isNative();
+    const token = accessToken
+      || sessionStorage.getItem(LS_KEY) // eslint-disable-line
+      || localStorage.getItem(LS_KEY)
+      || isNative();
 
     commit(m.AUTHORIZING, token);
 
@@ -37,6 +40,7 @@ export default {
       .then(res => {
         const { id: gotToken } = res;
         localStorage.setItem(LS_KEY, gotToken);
+        sessionStorage.setItem(LS_KEY, gotToken); // eslint-disable-line
         authorizeJSDataStore(gotToken, res.account.org);
         commit(m.AUTHORIZED, res);
         commit(m.SAVE_ACCOUNT, { authorization: gotToken, account: res.account });
