@@ -1,12 +1,12 @@
 /* eslint-disable no-param-reassign */
 import Vue from 'vue';
 import isFunction from 'lodash/isFunction';
-// import store from 'sistemium-telegram/jsdata/store';
 import Model from 'sistemium-jsdata/lib/Model';
-// import log from 'sistemium-telegram/services/log';
-// import { serverDateTimeFormat } from 'sistemium-telegram/services/moments';
+import jsDataStore from 'sistemium-jsdata/lib/store';
 
-// const { debug } = log('model');
+export function getModel(name) {
+  return jsDataStore.getModel(name);
+}
 
 export default class VueManagedModel extends Model {
 
