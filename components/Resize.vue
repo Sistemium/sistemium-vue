@@ -28,7 +28,9 @@ export default {
 
   mounted() {
     window.addEventListener('resize', this.handleResize);
-    this.setHeight();
+    this.$nextTick(() => {
+      this.setHeight();
+    });
   },
 
   beforeDestroy() {
