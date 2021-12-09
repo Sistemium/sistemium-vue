@@ -1,22 +1,26 @@
 import get from 'lodash/get';
+import set from 'lodash/set';
 import assign from 'lodash/assign';
 import isArray from 'lodash/isArray';
 import first from 'lodash/first';
+
+const STM_ANDROID_KEY = 'stmAndroid';
+const IOS_MESSAGE_HANDLERS_KEY = 'webkit.messageHandlers';
+const STM_CALLBACK = 'iSistemiumIOSCallback';
+const STM_ERROR_CALLBACK = 'iSistemiumIOSErrorCallback';
+const ARRAY_MESSAGE_CALLBACK = 'arrayMessageCallback';
+const MESSAGE_CALLBACK = 'messageCallback';
 
 let requestIdCounter = 0;
 let tabBarShown = true;
 
 const messages = {};
-const messageHandlers = get(window, 'stmAndroid') || get(window, 'webkit.messageHandlers');
+const messageHandlers = get(window, STM_ANDROID_KEY) || get(window, IOS_MESSAGE_HANDLERS_KEY);
 
-const ARRAY_MESSAGE_CALLBACK = 'arrayMessageCallback';
-window[ARRAY_MESSAGE_CALLBACK] = arrayMessageCallback;
-
-const MESSAGE_CALLBACK = 'messageCallback';
-window[MESSAGE_CALLBACK] = messageCallback;
-
-window.iSistemiumIOSCallback = arrayMessageCallback;
-window.iSistemiumIOSErrorCallback = arrayMessageCallback;
+set(window, ARRAY_MESSAGE_CALLBACK, arrayMessageCallback);
+set(window, MESSAGE_CALLBACK, messageCallback);
+set(window, STM_CALLBACK, arrayMessageCallback);
+set(window, STM_ERROR_CALLBACK, arrayMessageCallback);
 
 // if (isNative()) {
 //   toggleTabBar();
