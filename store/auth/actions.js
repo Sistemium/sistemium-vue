@@ -1,17 +1,16 @@
-import { authorize as authorizeJSDataStore } from 'sistemium-jsdata/lib/store';
-import { confirm, login, roles } from 'sistemium-jsdata/lib/auth';
-
+import { isNative, getRoles } from 'sistemium-data/src/util/native';
+import { axios as http } from 'sistemium-data/src/util/axios';
+import * as ls from '../../services/localStorage';
 import * as m from './mutations';
-import { isNative, getRoles } from '../../services/native';
 
-const LS_KEY = 'stv.authorization';
+const LS_KEY = 'authorization';
 
 export const AUTH_INIT = 'AUTH_INIT';
+export const LOGOFF = 'LOGOFF';
+export const CLEAR_ERROR = 'CLEAR_ERROR';
+export const LOG_ACCOUNT = 'LOG_ACCOUNT';
 export const AUTH_REQUEST = 'AUTH_REQUEST';
 export const AUTH_REQUEST_CONFIRM = 'AUTH_REQUEST_CONFIRM';
-export const LOGOFF = 'LOGOFF';
-export const CLEAR_ERROR = '';
-export const LOG_ACCOUNT = 'LOG_ACCOUNT';
 
 export default {
 
@@ -21,31 +20,93 @@ export default {
 
   async [AUTH_INIT]({ commit }, accessToken) {
 
-    const token = accessToken
-      || sessionStorage.getItem(LS_KEY) // eslint-disable-line
-      || localStorage.getItem(LS_KEY)
-      || isNative();
-
-    commit(m.AUTHORIZING, token);
+    const token = isNative() ? true : (
+      accessToken
+      || ls.getSessionStorageItem(LS_KEY)
+      || ls.getLocalStorageItem(LS_KEY)
+    );
 
     if (!token) {
-      return Promise.resolve();
+      return false;
     }
 
-    const rolesPromise = isNative() ? getRoles() : roles(token);
+    commit(m.SET_AUTHORIZING, token);
 
-    // await new Promise(resolve => setTimeout(resolve, 500));
+    try {
 
-    return rolesPromise
-      .then(res => {
-        const { id: gotToken } = res;
-        localStorage.setItem(LS_KEY, gotToken);
-        sessionStorage.setItem(LS_KEY, gotToken); // eslint-disable-line
-        authorizeJSDataStore(gotToken, res.account.org);
-        commit(m.AUTHORIZED, res);
-        commit(m.SAVE_ACCOUNT, { authorization: gotToken, account: res.account });
-      })
-      .catch(error => commit(m.NOT_AUTHORIZED, error));
+      const {
+        id: responseToken,
+        account,
+        roles,
+      } = await (isNative() ? getRoles() : checkRoles(token));
+
+      const gotToken = responseToken || token;
+
+      ls.setLocalStorageItem(LS_KEY, gotToken);
+      ls.setSessionStorageItem(LS_KEY, gotToken);
+
+      commit(m.SET_AUTHORIZED, {
+        token: gotToken,
+        account,
+        roles,
+      });
+
+      commit(m.SAVE_ACCOUNT, {
+        authorization: gotToken,
+        account,
+      });
+
+    } catch (err) {
+      commit(m.SET_NOT_AUTHORIZED, err);
+      return false;
+    }
+
+    return true;
+
+  },
+
+  /*
+  Request phone authorization code
+   */
+
+  [AUTH_REQUEST]({ commit }, {
+    value,
+    input: phone,
+  }) {
+
+    commit(m.PHA_AUTH_TOKEN, {});
+    commit(m.SET_AUTHORIZING, phone);
+
+    const res = login(`8${value}`)
+      .then(id => commit(m.PHA_AUTH_TOKEN, {
+        id,
+        phone,
+      }));
+
+    res.catch(() => commit(m.SET_NOT_AUTHORIZED, 'Неизвестный номер'));
+
+    return res;
+
+  },
+
+  /*
+  Confirm phone authorization code
+   */
+
+  [AUTH_REQUEST_CONFIRM]({
+    state,
+    dispatch,
+    commit,
+  }, { value: code }) {
+
+    commit(m.SET_AUTHORIZING, code);
+
+    const res = confirm(code, state[m.PHA_AUTH_TOKEN].id)
+      .then(({ accessToken }) => dispatch(AUTH_INIT, accessToken));
+
+    res.catch(() => commit(m.SET_NOT_AUTHORIZED, 'Неправильный пароль'));
+
+    return res;
 
   },
 
@@ -66,52 +127,59 @@ export default {
   },
 
   /*
-  Request phone authorization code
-   */
-
-  [AUTH_REQUEST]({ commit }, { value, input: phone }) {
-
-    commit(m.PHA_AUTH_TOKEN, {});
-    commit(m.AUTHORIZING, phone);
-
-    const res = login(`8${value}`)
-      .then(id => commit(m.PHA_AUTH_TOKEN, { id, phone }));
-
-    res.catch(() => commit(m.NOT_AUTHORIZED, 'Неизвестный номер'));
-
-    return res;
-
-  },
-
-  /*
-  Confirm phone authorization code
-   */
-
-  [AUTH_REQUEST_CONFIRM]({ state, dispatch, commit }, { value: code }) {
-
-    commit(m.AUTHORIZING, code);
-
-    const res = confirm(code, state[m.PHA_AUTH_TOKEN].id)
-      .then(({ accessToken }) => dispatch(AUTH_INIT, accessToken));
-
-    res.catch(() => commit(m.NOT_AUTHORIZED, 'Неправильный пароль'));
-
-    return res;
-
-  },
-
-  /*
   Clean up
    */
 
   [LOGOFF]({ commit }) {
-    commit(m.AUTHORIZED, { account: false, roles: false });
+    commit(m.SET_AUTHORIZED, {});
     localStorage.removeItem(LS_KEY);
     m.clearSavedAccounts();
+    // commit(m.AUTHORIZED, { account: false, roles: false });
   },
 
   [CLEAR_ERROR]({ commit }) {
-    commit(m.NOT_AUTHORIZED, false);
+    commit(m.SET_NOT_AUTHORIZED, null);
   },
 
 };
+
+async function checkRoles(token) {
+
+  return http.get(process.env.VUE_APP_PHA_ROLES_URL, {
+    headers: { authorization: token },
+  })
+    .then(res => res.data);
+
+}
+
+async function login(phone) {
+
+  const config = {
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+  };
+
+  return http.post(process.env.VUE_APP_PHA_AUTH_URL, `mobileNumber=${phone}`, config)
+    .then(res => res.data.ID);
+
+}
+
+async function confirm(code, id) {
+
+  const params = {
+    ID: id,
+    smsCode: code,
+  };
+  const config = {
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    transformRequest: [data => {
+      const str = Object.keys(data)
+        .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`);
+      return str.join('&');
+    }],
+  };
+
+  const { data } = await http.post(process.env.VUE_APP_PHA_AUTH_URL, params, config);
+
+  return data;
+
+}

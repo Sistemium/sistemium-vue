@@ -1,24 +1,24 @@
-import getters from './getters';
+import getters, * as g from './getters';
 import actions from './actions';
-import mutations, { PHA_AUTH_TOKEN } from './mutations';
+import mutations, * as m from './mutations';
 
 export default {
 
   namespaced: true,
-
-  getters,
   actions,
   mutations,
+  getters,
 
   state() {
     return {
       id: undefined,
-      account: undefined,
       busy: false,
-      roles: undefined,
-      token: undefined,
-      error: false,
-      [PHA_AUTH_TOKEN]: {},
+      [g.ROLES]: null,
+      error: null,
+      [g.ACCOUNT]: null,
+      [g.IS_AUTHORIZING]: false,
+      [g.ACCESS_TOKEN]: null,
+      [m.PHA_AUTH_TOKEN]: {},
       savedAccounts: [],
     };
   },

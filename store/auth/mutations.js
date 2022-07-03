@@ -1,21 +1,22 @@
-// import Vue from 'vue';
+import Vue from 'vue';
 import map from 'lodash/map';
 
+import * as ls from '../../services/localStorage';
 import * as g from './getters';
 
-export const AUTHORIZING = 'AUTHORIZING';
-export const AUTHORIZED = 'AUTHORIZED';
-export const NOT_AUTHORIZED = 'NOT_AUTHORIZED';
+export const SET_AUTHORIZING = set(g.IS_AUTHORIZING);
+export const SET_AUTHORIZED = set('AUTHORIZED');
+export const SET_NOT_AUTHORIZED = set('NOT_AUTHORIZED');
 export const SAVE_ACCOUNT = 'SAVE_ACCOUNT';
 export const PHA_AUTH_TOKEN = 'PHA_AUTH_TOKEN';
-// export const SAVE_ACCOUNT = 'SAVE_ACCOUNT';
 
-const LS_KEY_ACCOUNTS = 'stv.accounts';
+const LS_KEY_ACCOUNTS = 'accounts';
 
 export default {
 
-  [AUTHORIZING](state, token) {
-    state.busy = token || false;
+  [SET_AUTHORIZING](state, token) {
+    Vue.set(state, g.IS_AUTHORIZING, token || false);
+    state.error = null;
   },
 
   [PHA_AUTH_TOKEN](state, id) {
@@ -23,16 +24,15 @@ export default {
     state[PHA_AUTH_TOKEN] = id;
   },
 
-  [AUTHORIZED](state, data) {
+  [SET_AUTHORIZED](state, { token, account, roles }) {
     notBusy(state);
-    state[PHA_AUTH_TOKEN] = false;
-    Object.keys(data)
-      .forEach(key => {
-        state[key] = data[key];
-      });
+    state.error = null;
+    state[g.ACCESS_TOKEN] = token;
+    state.account = account;
+    state.roles = roles;
   },
 
-  [NOT_AUTHORIZED](state, error) {
+  [SET_NOT_AUTHORIZED](state, error) {
     notBusy(state);
     state.error = error;
   },
@@ -48,15 +48,17 @@ export default {
 function saveLoggedAccount(authorization, account) {
   const saved = getSavedAccounts();
   saved[account.authId || authorization] = { account, authorization };
-  localStorage.setItem(LS_KEY_ACCOUNTS, JSON.stringify(saved));
+  ls.setLocalStorageValue(LS_KEY_ACCOUNTS, saved);
   return saved;
 }
 
-
 function notBusy(state) {
-  state.busy = false;
+  state[g.IS_AUTHORIZING] = false;
 }
 
+function set(name) {
+  return `SET_${name}`;
+}
 
 export function getSavedAuthorization(account) {
   const allSaved = getSavedAccounts();
@@ -65,9 +67,8 @@ export function getSavedAuthorization(account) {
 }
 
 function getSavedAccounts() {
-  return JSON.parse(localStorage.getItem(LS_KEY_ACCOUNTS) || '{}') || {};
+  return ls.getLocalStorageValue(LS_KEY_ACCOUNTS) || {};
 }
-
 
 export function clearSavedAccounts() {
   localStorage.removeItem(LS_KEY_ACCOUNTS);
