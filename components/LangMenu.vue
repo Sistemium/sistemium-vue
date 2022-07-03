@@ -1,6 +1,6 @@
 <template lang="pug">
 
-el-dropdown.lang-menu(@command="setLang" :trigger="trigger")
+el-dropdown.lang-menu(@command="setLang" :trigger="trigger" :size="size")
   span.el-dropdown-link
     flagged-lang(:icon="lang.icon" :text="lang.key")
       i.el-icon-arrow-down
@@ -29,6 +29,7 @@ export default {
       type: String,
       default: 'hover',
     },
+    size: String,
   },
   computed: {
     lang() {
