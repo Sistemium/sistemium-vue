@@ -2,11 +2,11 @@
 
 el-badge.countdown(:value="countdown" :hidden="!countdown")
   el-button.confirm-button(
-  :type="buttonType"
-  :class="countdown && 'confirmation'"
-  :size="size"
-  :disabled="isDisabled"
-  @click="onClick"
+    :type="buttonType"
+    :class="countdown && 'confirmation'"
+    :size="size"
+    :disabled="isDisabled"
+    @click="onClick"
   )
     span {{ buttonText }}
 
