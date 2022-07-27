@@ -5,6 +5,7 @@ el-badge.countdown(:value="countdown" :hidden="!countdown")
   :type="buttonType"
   :class="countdown && 'confirmation'"
   :size="size"
+  :disabled="isDisabled"
   @click="onClick"
   )
     span {{ buttonText }}
@@ -30,24 +31,39 @@ export default {
       type: Number,
       default: 5000,
     },
+    confirmDelay: {
+      type: Number,
+      default: 2,
+    },
+    confirmLength: {
+      type: Number,
+      default: 6,
+    },
   },
 
   data() {
     return {
       confirmation: false,
-      countdown: false,
+      countdown: null,
       interval: false,
     };
   },
 
   computed: {
 
+    isDisabled() {
+      return this.confirmation && this.countdown > this.confirmDelay;
+    },
+
     buttonText() {
       return this.confirmation ? this.confirmText || `${this.text}?` : this.text;
     },
 
     buttonType() {
-      return this.confirmation ? 'warning' : this.type;
+      if (!this.confirmation) {
+        return this.type;
+      }
+      return this.isDisabled ? 'warning' : 'danger';
     },
 
   },
@@ -73,7 +89,7 @@ export default {
         this.$emit('confirm');
       } else {
         this.confirmation = setTimeout(onTimeout, this.timeout);
-        this.countdown = 5;
+        this.countdown = this.confirmLength;
         this.interval = setInterval(onCountdown, 1000);
       }
 
