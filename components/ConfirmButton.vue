@@ -31,6 +31,10 @@ export default {
       type: Number,
       default: 5000,
     },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
     confirmDelay: {
       type: Number,
       default: 2,
@@ -52,7 +56,7 @@ export default {
   computed: {
 
     isDisabled() {
-      return this.confirmation && this.countdown > this.confirmDelay;
+      return this.disabled || (this.confirmation && this.countdown > this.confirmDelay);
     },
 
     buttonText() {
