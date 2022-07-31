@@ -1,5 +1,7 @@
 const { VUE_APP_LS_PREFIX = 'stv' } = process.env;
 
+const { sessionStorage } = window;
+
 export function setLocalStorageItem(key, value) {
   return localStorage.setItem(keyName(key), value);
 }
@@ -30,5 +32,12 @@ export function getLocalStorageValue(key, defaultValue) {
     return value === null ? defaultValue : JSON.parse(value);
   } catch (e) {
     return null;
+  }
+}
+
+export function removeLocalStorageItem(key) {
+  localStorage.removeItem(keyName(key));
+  if (sessionStorage) {
+    sessionStorage.removeItem(keyName(key));
   }
 }

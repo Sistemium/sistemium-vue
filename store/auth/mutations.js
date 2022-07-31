@@ -71,5 +71,5 @@ function getSavedAccounts() {
 }
 
 export function clearSavedAccounts() {
-  localStorage.removeItem(LS_KEY_ACCOUNTS);
+  ls.removeLocalStorageItem(LS_KEY_ACCOUNTS);
 }

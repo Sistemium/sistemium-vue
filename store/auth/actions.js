@@ -2,6 +2,7 @@ import { isNative, getRoles } from 'sistemium-data/src/util/native';
 import { axios as http } from 'sistemium-data/src/util/axios';
 import * as ls from '../../services/localStorage';
 import * as m from './mutations';
+import { removeLocalStorageItem } from '../../services/localStorage';
 
 const LS_KEY = 'authorization';
 
@@ -132,7 +133,7 @@ export default {
 
   [LOGOFF]({ commit }) {
     commit(m.SET_AUTHORIZED, {});
-    localStorage.removeItem(LS_KEY);
+    ls.removeLocalStorageItem(LS_KEY);
     m.clearSavedAccounts();
     // commit(m.AUTHORIZED, { account: false, roles: false });
   },
