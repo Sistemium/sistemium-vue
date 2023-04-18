@@ -1,4 +1,4 @@
-const { VITE_LS_PREFIX = 'stv' } = process.env;
+const { VITE_LS_PREFIX = 'stv' } = import.meta.env;
 
 const { sessionStorage } = window;
 
@@ -19,7 +19,7 @@ export function getSessionStorageItem(key) {
 }
 
 function keyName(key) {
-  return `${VUE_APP_LS_PREFIX}.${key}`;
+  return `${VITE_LS_PREFIX}.${key}`;
 }
 
 export function setLocalStorageValue(key, value) {

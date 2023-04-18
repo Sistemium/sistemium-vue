@@ -147,7 +147,7 @@ export default {
 
 async function checkRoles(token) {
 
-  return http.get(process.env.VUE_APP_PHA_ROLES_URL, {
+  return http.get(import.meta.env.VITE_PHA_ROLES_URL, {
     headers: { authorization: token },
   })
     .then(res => res.data);
@@ -160,7 +160,7 @@ async function login(phone) {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
   };
 
-  return http.post(process.env.VUE_APP_PHA_AUTH_URL, `mobileNumber=${phone}`, config)
+  return http.post(import.meta.env.VITE_PHA_AUTH_URL, `mobileNumber=${phone}`, config)
     .then(res => res.data.ID);
 
 }
