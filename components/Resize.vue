@@ -10,7 +10,7 @@ import debounce from 'lodash/debounce';
 
 export default {
 
-  name: 'Resize',
+  name: 'StmResize',
 
   props: {
     padding: Number,

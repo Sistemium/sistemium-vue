@@ -1,6 +1,9 @@
 <template lang="pug">
 
-el-badge.countdown(:value="countdown" :hidden="!countdown")
+el-badge.countdown(
+  :value="countdown"
+  :hidden="!countdown"
+)
   el-button.confirm-button(
     :type="buttonType"
     :class="countdown && 'confirmation'"
@@ -56,7 +59,7 @@ export default {
   computed: {
 
     isDisabled() {
-      return this.disabled || (this.confirmation && this.countdown > this.confirmDelay);
+      return this.disabled || (this.confirmation && this.countdown > this.confirmDelay) || null;
     },
 
     buttonText() {

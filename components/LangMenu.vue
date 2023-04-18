@@ -4,13 +4,14 @@ el-dropdown.lang-menu(@command="setLang" :trigger="trigger" :size="size")
   span.el-dropdown-link
     flagged-lang(:icon="lang.icon" :text="lang.key")
       i.el-icon-arrow-down
-  el-dropdown-menu(slot="dropdown")
-    el-dropdown-item(
-      v-for="lang in languages"
-      :key="lang.key"
-      :command="lang"
-    )
-      flagged-lang(:icon="lang.icon" :text="lang.name")
+  template(#dropdown)
+    el-dropdown-menu
+      el-dropdown-item(
+        v-for="lng in languages"
+        :key="lng.key"
+        :command="lng"
+      )
+        flagged-lang(:icon="lng.icon" :text="lng.name")
 
 </template>
 <script>
@@ -47,8 +48,6 @@ export default {
 
 </script>
 <style scoped lang="scss">
-
-//@import "../../../styles/variables";
 
 .el-dropdown-link {
   cursor: pointer;

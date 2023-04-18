@@ -1,4 +1,4 @@
-const { VUE_APP_LS_PREFIX = 'stv' } = process.env;
+const { VITE_LS_PREFIX = 'stv' } = process.env;
 
 const { sessionStorage } = window;
 

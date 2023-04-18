@@ -2,22 +2,25 @@
 
 .form-buttons
   confirm-button(
-    size="small" type="warning"
+    size="small"
+    type="warning"
     @confirm="$emit('deleteClick')"
     :text="$t('delete')"
     v-if="!changed"
     v-show="deletable"
-    :disabled="loading"
+    :disabled="loading || null"
   )
   el-button(
-    type="default" size="small"
+    type="default"
+    size="small"
     @click="$emit('cancelClick')"
-    :disabled="loading"
+    :disabled="loading || null"
   ) {{ changed ? $t('cancel') : $t('close') }}
   el-button(
-    type="primary" size="small"
+    type="primary"
+    size="small"
     @click="$emit('saveClick')"
-    :disabled="loading"
+    :disabled="loading || null"
     v-if="changed"
   ) {{ $t('save') }}
 
