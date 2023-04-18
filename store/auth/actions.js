@@ -2,8 +2,9 @@ import { isNative, getRoles } from 'sistemium-data/src/util/native';
 import { axios as http } from 'sistemium-data/src/util/axios';
 import * as ls from '../../services/localStorage';
 import * as m from './mutations';
-import { removeLocalStorageItem } from '../../services/localStorage';
+// import { removeLocalStorageItem } from '../../services/localStorage';
 
+const { VITE_PHA_AUTH_URL } = import.meta.env;
 const LS_KEY = 'authorization';
 
 export const AUTH_INIT = 'AUTH_INIT';
@@ -179,7 +180,7 @@ async function confirm(code, id) {
     }],
   };
 
-  const { data } = await http.post(process.env.VUE_APP_PHA_AUTH_URL, params, config);
+  const { data } = await http.post(VITE_PHA_AUTH_URL, params, config);
 
   return data;
 
