@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import map from 'lodash/map';
 
 import * as ls from '../../services/localStorage';
@@ -15,7 +14,7 @@ const LS_KEY_ACCOUNTS = 'accounts';
 export default {
 
   [SET_AUTHORIZING](state, token) {
-    Vue.set(state, g.IS_AUTHORIZING, token || false);
+    state[g.IS_AUTHORIZING] = token || false;
     state.error = null;
   },
 
