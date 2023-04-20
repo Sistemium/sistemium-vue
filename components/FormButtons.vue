@@ -2,67 +2,71 @@
 
 .form-buttons
   confirm-button(
-    size="small"
+    :size="size"
     type="warning"
-    @confirm="$emit('deleteClick')"
-    :text="$t('delete')"
+    @confirm="emit('deleteClick')"
+    :text="t('delete')"
     v-if="!changed"
     v-show="deletable"
     :disabled="loading || null"
   )
   el-button(
     type="default"
-    size="small"
-    @click="$emit('cancelClick')"
+    :size="size"
+    @click="emit('cancelClick')"
     :disabled="loading || null"
-  ) {{ changed ? $t('cancel') : $t('close') }}
+  ) {{ changed ? t('cancel') : t('close') }}
   el-button(
     type="primary"
-    size="small"
-    @click="$emit('saveClick')"
+    :size="size"
+    @click="emit('saveClick')"
     :disabled="loading || null"
     v-if="changed"
-  ) {{ $t('save') }}
+  ) {{ t('save') }}
 
 </template>
-<script>
+<script setup>
 
+import { useI18n } from 'vue-i18n';
 import ConfirmButton from './ConfirmButton.vue';
 
-export default {
-  name: 'FormButtons',
-  props: {
-    loading: Boolean,
-    changed: Boolean,
-    deletable: {
-      type: Boolean,
-      default: true,
+defineProps({
+  loading: Boolean,
+  changed: Boolean,
+  deletable: {
+    type: Boolean,
+    default: true,
+  },
+  size: {
+    type: String,
+    default: 'small',
+  },
+});
+
+const emit = defineEmits(['saveClick', 'close', 'cancelClick', 'deleteClick']);
+
+const { t } = useI18n({
+  messages: {
+    en: {
+      save: 'Save',
+      cancel: 'Cancel',
+      close: 'Close',
+      delete: 'Delete',
+    },
+    ru: {
+      save: 'Сохранить',
+      cancel: 'Отмена',
+      close: 'Закрыть',
+      delete: 'Удалить',
+    },
+    lt: {
+      save: 'Saugoti',
+      cancel: 'Atšaukti',
+      close: 'Uždaryti',
+      delete: 'Ištrinti',
     },
   },
-  components: { ConfirmButton },
-  i18n: {
-    messages: {
-      en: {
-        save: 'Save',
-        cancel: 'Cancel',
-        close: 'Close',
-        delete: 'Delete',
-      },
-      ru: {
-        save: 'Сохранить',
-        cancel: 'Отмена',
-        close: 'Закрыть',
-        delete: 'Удалить',
-      },
-      lt: {
-        save: 'Saugoti',
-        cancel: 'Atšaukti',
-        close: 'Uždaryti',
-        delete: 'Ištrinti',
-      },
-    },
-  },
-};
+});
 
 </script>
 <style scoped lang="scss">

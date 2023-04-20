@@ -57,7 +57,7 @@ const isDisabled = computed(() => {
 });
 
 const buttonText = computed(() => {
-  return confirmation.value ? props.confirmText || `${props.text}?` : props.text;
+  return confirmation.value ? (props.confirmText || `${props.text}?`) : props.text;
 });
 
 const buttonType = computed(() => {

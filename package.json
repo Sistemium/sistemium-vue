@@ -4,7 +4,7 @@
   "description": "Sistemium VueJS base library",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint components mixins services store styles",
+    "lint": "eslint components/* mixins/* services/* store/*",
     "test:unit": "vitest tests"
   },
   "repository": {
@@ -22,10 +22,10 @@
     "lodash": "^4.17.21",
     "sistemium-data": "^1.9.1",
     "sistemium-debug": "^1.0.1",
-    "vue-i18n": "^9.2.2",
-    "vuex": "^4.1.0",
     "vite": "^4.2.0",
-    "vue": "^3.2.47"
+    "vue": "^3.2.47",
+    "vue-i18n": "^9.2.2",
+    "vuex": "^4.1.0"
   },
   "devDependencies": {
     "@babel/types": "^7.21.4",
@@ -34,6 +34,7 @@
     "axios-mock-adapter": "^1.21.4",
     "eslint": "^8.38.0",
     "eslint-plugin-vue": "^9.11.0",
+    "eslint-plugin-vue-pug": "^0.6.0",
     "happy-dom": "^9.8.2",
     "pug": "^3.0.2",
     "typescript": "^5.0.4",

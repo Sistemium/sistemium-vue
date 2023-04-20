@@ -1,6 +1,9 @@
 <template lang="pug">
 
-.stm-resize(:style="style" ref="root")
+.stm-resize(
+  :style="style"
+  ref="root"
+)
   slot
 
 </template>
@@ -33,7 +36,7 @@ export default {
     });
   },
 
-  beforeDestroy() {
+  beforeUnmount() {
     window.removeEventListener('resize', this.handleResize);
   },
 

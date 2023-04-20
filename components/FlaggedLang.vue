@@ -6,26 +6,21 @@ span.flagged-lang
   slot
 
 </template>
-<script>
+<script setup>
 
-const NAME = 'FlaggedLang';
-
-export default {
-  name: NAME,
-  props: {
-    icon: String,
-    text: String,
-  },
-};
+defineProps({
+  icon: String,
+  text: String,
+});
 
 </script>
 <style scoped lang="scss">
-
 @import "../styles/variables";
 
 .flagged-lang {
   display: flex;
   align-items: center;
+
   > * + * {
     margin-left: $padding;
   }

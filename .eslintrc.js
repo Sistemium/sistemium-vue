@@ -11,17 +11,13 @@ module.exports = {
   env: {
   },
   extends: [
-    'plugin:vue/essential',
-    '@vue/airbnb',
+    'plugin:vue/vue3-recommended',
+    'plugin:vue-pug/vue3-recommended',
   ],
-  plugins: [],
+  plugins: ['vue'],
   settings: {
   },
   rules: {
-    'import/extensions': ['error', 'always', {
-      js: 'never',
-      // vue: 'never'
-    }],
     'vue/require-default-prop': 'off',
     'no-param-reassign': ['error', {
       props: true,
@@ -32,9 +28,6 @@ module.exports = {
         'acc', // for reduce accumulators
       ],
     }],
-    'import/no-extraneous-dependencies': ['error', {
-      // optionalDependencies: ['test/unit/index.js']
-    }],
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-use-before-define': ['error', {
       functions: false,
@@ -43,5 +36,6 @@ module.exports = {
     'padded-blocks': 'off',
     'arrow-parens': ['error', 'as-needed'],
     'no-mixed-operators': 'off',
+    'vue/attributes-order': 'off',
   },
 };

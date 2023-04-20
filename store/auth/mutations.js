@@ -43,7 +43,6 @@ export default {
 
 };
 
-
 function saveLoggedAccount(authorization, account) {
   const saved = getSavedAccounts();
   saved[account.authId || authorization] = { account, authorization };
