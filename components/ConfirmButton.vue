@@ -14,96 +14,81 @@ el-badge.countdown(
     span {{ buttonText }}
 
 </template>
-<script>
+<script setup>
 
-export default {
+import { computed, ref } from 'vue';
 
-  name: 'ConfirmButton',
-
-  props: {
-    text: String,
-    size: {
-      type: String,
-    },
-    type: {
-      type: String,
-      default: 'default',
-    },
-    confirmText: String,
-    timeout: {
-      type: Number,
-      default: 5000,
-    },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
-    confirmDelay: {
-      type: Number,
-      default: 2,
-    },
-    confirmLength: {
-      type: Number,
-      default: 6,
-    },
+const props = defineProps({
+  text: String,
+  size: {
+    type: String,
   },
-
-  data() {
-    return {
-      confirmation: false,
-      countdown: null,
-      interval: false,
-    };
+  type: {
+    type: String,
+    default: 'default',
   },
-
-  computed: {
-
-    isDisabled() {
-      return this.disabled || (this.confirmation && this.countdown > this.confirmDelay) || null;
-    },
-
-    buttonText() {
-      return this.confirmation ? this.confirmText || `${this.text}?` : this.text;
-    },
-
-    buttonType() {
-      if (!this.confirmation) {
-        return this.type;
-      }
-      return this.isDisabled ? 'warning' : 'danger';
-    },
-
+  confirmText: String,
+  timeout: {
+    type: Number,
+    default: 5000,
   },
-
-  methods: {
-    onClick() {
-
-      const onTimeout = () => {
-        this.confirmation = false;
-        clearInterval(this.interval);
-        this.countdown = 0;
-      };
-
-      const onCountdown = () => {
-        this.countdown -= 1;
-      };
-
-      const { confirmation } = this;
-
-      if (confirmation) {
-        clearTimeout(confirmation);
-        onTimeout();
-        this.$emit('confirm');
-      } else {
-        this.confirmation = setTimeout(onTimeout, this.timeout);
-        this.countdown = this.confirmLength;
-        this.interval = setInterval(onCountdown, 1000);
-      }
-
-    },
+  disabled: {
+    type: Boolean,
+    default: false,
   },
+  confirmDelay: {
+    type: Number,
+    default: 2,
+  },
+  confirmLength: {
+    type: Number,
+    default: 6,
+  },
+});
 
-};
+const emit = defineEmits(['confirm']);
+
+const confirmation = ref(null);
+const countdown = ref(0);
+const interval = ref(null);
+
+const isDisabled = computed(() => {
+  return props.disabled || (confirmation.value && countdown.value > props.confirmDelay) || null;
+});
+
+const buttonText = computed(() => {
+  return confirmation.value ? props.confirmText || `${props.text}?` : props.text;
+});
+
+const buttonType = computed(() => {
+  if (!confirmation.value) {
+    return props.type;
+  }
+  return isDisabled.value ? 'warning' : 'danger';
+});
+
+function onClick() {
+
+  const onTimeout = () => {
+    confirmation.value = false;
+    clearInterval(interval.value);
+    countdown.value = 0;
+  };
+
+  const onCountdown = () => {
+    countdown.value -= 1;
+  };
+
+  if (confirmation.value) {
+    clearTimeout(confirmation.value);
+    onTimeout();
+    emit('confirm');
+  } else {
+    confirmation.value = setTimeout(onTimeout, props.timeout);
+    countdown.value = props.confirmLength;
+    interval.value = setInterval(onCountdown, 1000);
+  }
+}
 
 </script>
 <style scoped>
