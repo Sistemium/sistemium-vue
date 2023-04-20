@@ -28,7 +28,6 @@ el-dropdown.lang-menu(
 
 import find from 'lodash/find';
 import { computed } from 'vue';
-// import { saveLocale } from '@/i18n';
 import FlaggedLang from './FlaggedLang.vue';
 
 const props = defineProps({
@@ -38,16 +37,21 @@ const props = defineProps({
     default: 'hover',
   },
   size: String,
+  modelValue: {
+    type: String,
+    required: true,
+  }
 });
 
+const emit = defineEmits(['update:modelValue']);
 const lang = computed(() => {
   const { languages } = props;
-  return find(languages, { key: this.$i18n.locale }) || languages[0];
+  const found = find(languages, { key: props.modelValue });
+  return found || languages[0];
 });
 
 function setLang(lng) {
-  // saveLocale(lang.key);
-  this.$i18n.locale = lng.key;
+  emit('update:modelValue', lng.key);
 }
 
 </script>
