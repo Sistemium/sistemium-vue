@@ -1,1 +1,1 @@
-export * from 'sistemium-data/src/util/native';
+export * from 'sistemium-data/lib/util/native';

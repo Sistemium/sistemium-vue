@@ -1,5 +1,5 @@
-import { isNative, getRoles } from 'sistemium-data/src/util/native';
-import { axios as http } from 'sistemium-data/src/util/axios';
+import { isNative, getRoles } from 'sistemium-data/lib/util/native';
+import { axios as http } from 'sistemium-data/lib/util/axios';
 import * as ls from '../../services/localStorage';
 import * as m from './mutations';
 // import { removeLocalStorageItem } from '../../services/localStorage';
