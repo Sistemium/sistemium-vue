@@ -10,6 +10,7 @@ el-badge.countdown(
     :size="size"
     :disabled="isDisabled"
     @click="onClick"
+    :link="link"
   )
     span {{ buttonText }}
 
@@ -44,6 +45,7 @@ const props = defineProps({
     type: Number,
     default: 6,
   },
+  link: Boolean,
 });
 
 const emit = defineEmits(['confirm']);
