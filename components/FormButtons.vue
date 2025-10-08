@@ -8,19 +8,19 @@
     :text="t('delete')"
     v-if="!changed"
     v-show="deletable"
-    :disabled="loading || null"
+    :disabled="disabled || loading || false"
   )
   el-button(
     type="default"
     :size="size"
     @click="emit('cancelClick')"
-    :disabled="loading || null"
+    :disabled="disabled || loading || false"
   ) {{ changed ? t('cancel') : t('close') }}
   el-button(
     type="primary"
     :size="size"
     @click="emit('saveClick')"
-    :disabled="loading || null"
+    :disabled="disabled || loading || false"
     v-if="changed"
   ) {{ t('save') }}
 
@@ -40,6 +40,10 @@ defineProps({
   size: {
     type: String,
     default: 'small',
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
   },
 });
 
